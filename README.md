@@ -2,6 +2,8 @@
 
 SoniTranslate is a modern, real-time voice translator specifically designed for low-latency translation between English and Finnish. It features a sleek glassmorphism interface and leverages powerful browser-native APIs for a seamless user experience.
 
+**🌐 [Live Demo](https://zsasannia70-png.github.io/translation_app/)**
+
 ## ✨ Features
 
 - **Live Voice Input**: Real-time transcription using the Web Speech API.
