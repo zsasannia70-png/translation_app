@@ -24,13 +24,10 @@
         </header>
 
         <section class="controls">
-            <div class="toggle-container">
-                <span id="label-en" class="lang-label active">English</span>
-                <label class="switch">
-                    <input type="checkbox" id="lang-toggle">
-                    <span class="slider round"></span>
-                </label>
-                <span id="label-fi" class="lang-label">Finnish</span>
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fi">FI</button>
+                <button class="lang-btn" data-lang="fa">FA</button>
             </div>
             
             <div class="video-container">
@@ -58,7 +55,7 @@
             </div>
             
             <div class="result-card">
-                <h3>Translated <span id="target-lang-tag">(Finnish)</span></h3>
+                <h3>Translated <span id="target-lang-tag">(Output)</span></h3>
                 <div id="translation-box" class="text-box highlight">...</div>
             </div>
         </section>

@@ -1,17 +1,21 @@
 const micBtn = document.getElementById('mic-btn');
-const langToggle = document.getElementById('lang-toggle');
+const langBtns = document.querySelectorAll('.lang-btn');
 const statusText = document.getElementById('status-text');
 const transcriptBox = document.getElementById('transcript-box');
 const translationBox = document.getElementById('translation-box');
-const labelEn = document.getElementById('label-en');
-const labelFi = document.getElementById('label-fi');
 const sourceTag = document.getElementById('source-lang-tag');
 const targetTag = document.getElementById('target-lang-tag');
 const webcam = document.getElementById('webcam');
 const subtitleOverlay = document.getElementById('subtitle-overlay');
 
-// Language state: true = Finnish to English, false = English to Finnish
-let isFiToEn = false;
+// Language state
+let currentLang = 'en';
+const langMap = {
+    'en': { name: 'English', code: 'en-US', target: 'fi' },
+    'fi': { name: 'Finnish', code: 'fi-FI', target: 'en' },
+    'fa': { name: 'Farsi', code: 'fa-IR', target: 'en' }
+};
+
 let recognition;
 let isListening = false;
 let stream;
@@ -47,7 +51,7 @@ if ('webkitSpeechRecognition' in window) {
 
     recognition.onend = () => {
         if (isListening) {
-            recognition.start(); // Keep listening for continuous feel
+            recognition.start();
         } else {
             micBtn.classList.remove('listening');
             statusText.innerText = 'Tap to start listening';
@@ -70,7 +74,6 @@ if ('webkitSpeechRecognition' in window) {
         if (textToTranslate) {
             transcriptBox.innerText = textToTranslate;
             subtitleOverlay.innerText = textToTranslate;
-            // Debounce or only translate significant changes to reduce latency feel
             translateText(textToTranslate);
         }
     };
@@ -79,34 +82,34 @@ if ('webkitSpeechRecognition' in window) {
     micBtn.disabled = true;
 }
 
-// Language Toggle Logic
-langToggle.addEventListener('change', () => {
-    isFiToEn = langToggle.checked;
-    
-    // Update UI Labels
-    if (isFiToEn) {
-        labelFi.classList.add('active');
-        labelEn.classList.remove('active');
-        sourceTag.innerText = '(Finnish)';
-        targetTag.innerText = '(English)';
-        if (recognition) recognition.lang = 'fi-FI';
-    } else {
-        labelEn.classList.add('active');
-        labelFi.classList.remove('active');
-        sourceTag.innerText = '(English)';
-        targetTag.innerText = '(Finnish)';
-        if (recognition) recognition.lang = 'en-US';
-    }
-    
-    // Reset boxes
-    transcriptBox.innerText = '...';
-    translationBox.innerText = '...';
-    
-    // Restart recognition if it was active to apply new language
-    if (isListening) {
-        recognition.stop();
-        setTimeout(() => recognition.start(), 300);
-    }
+// Language Picker Logic
+langBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        langBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        currentLang = btn.dataset.lang;
+        const config = langMap[currentLang];
+        
+        sourceTag.innerText = `(${config.name})`;
+        targetTag.innerText = `(${langMap[config.target].name})`;
+        
+        if (recognition) {
+            recognition.lang = config.code;
+            // Apply RTL for Farsi display
+            transcriptBox.style.direction = (currentLang === 'fa') ? 'rtl' : 'ltr';
+            subtitleOverlay.style.direction = (currentLang === 'fa') ? 'rtl' : 'ltr';
+        }
+        
+        // Reset boxes
+        transcriptBox.innerText = '...';
+        translationBox.innerText = '...';
+        
+        if (isListening) {
+            recognition.stop();
+            setTimeout(() => recognition.start(), 300);
+        }
+    });
 });
 
 // Set default language
@@ -136,11 +139,11 @@ let translationTimeout;
 async function translateText(text) {
     if (!text.trim()) return;
 
-    // Optional: Add a simple debounce to avoid too many API calls
     clearTimeout(translationTimeout);
     translationTimeout = setTimeout(async () => {
-        const sourceLang = isFiToEn ? 'fi' : 'en';
-        const targetLang = isFiToEn ? 'en' : 'fi';
+        const config = langMap[currentLang];
+        const sourceLang = currentLang;
+        const targetLang = config.target;
         
         try {
             const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`);
@@ -149,11 +152,14 @@ async function translateText(text) {
             if (data.responseData) {
                 const translated = data.responseData.translatedText;
                 translationBox.innerText = translated;
-                subtitleOverlay.innerText = translated; // Show translation as subtitle
+                
+                // Show translation as subtitle with correct direction
+                subtitleOverlay.innerText = translated;
+                subtitleOverlay.style.direction = (targetLang === 'fa') ? 'rtl' : 'ltr';
             }
         } catch (error) {
             console.error('Translation error:', error);
             translationBox.innerText = 'Translation error...';
         }
-    }, 500); // 500ms debounce
+    }, 500);
 }
