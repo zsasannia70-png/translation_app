@@ -72,7 +72,7 @@ if ('webkitSpeechRecognition' in window) {
 
         const textToTranslate = finalTranscript || interimTranscript;
         if (textToTranslate) {
-            transcriptBox.innerText = textToTranslate;
+            transcriptBox.value = textToTranslate;
             subtitleOverlay.innerText = ''; // Clear old subtitles immediately
             translateText(textToTranslate);
         }
@@ -102,7 +102,7 @@ langBtns.forEach(btn => {
         }
         
         // Reset boxes
-        transcriptBox.innerText = '...';
+        transcriptBox.value = '';
         translationBox.innerText = '...';
         
         if (isListening) {
@@ -136,7 +136,7 @@ function stopListening() {
 
 // Manual Text Input Logic
 transcriptBox.addEventListener('input', () => {
-    const text = transcriptBox.innerText;
+    const text = transcriptBox.value;
     subtitleOverlay.innerText = ''; // Clear old subtitles immediately
     translateText(text);
 });
