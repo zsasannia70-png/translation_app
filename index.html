@@ -16,25 +16,19 @@
 <body>
     <main class="glass-container">
         <header>
-            <h1>Zahra's <span>Translation App</span></h1>
-            <p class="subtitle">Real-time Video Subtitles & Translation</p>
+            <h1>Zahra's <span>Translator</span></h1>
+            <p class="subtitle">AI-Powered Real-time Conversation</p>
         </header>
 
         <section class="controls">
-            <div class="language-selector">
-                <button class="lang-btn active" data-lang="en">EN</button>
-                <button class="lang-btn" data-lang="fi">FI</button>
-                <button class="lang-btn" data-lang="fa">Persian</button>
-            </div>
-
-            <div class="video-container">
-                <video id="webcam" autoplay playsinline muted></video>
-                <div id="subtitle-overlay" class="subtitle-text">...</div>
+            <div class="status-indicator">
+                <div id="status-pulse" class="pulse"></div>
+                <p id="status-text">Tap the mic to begin</p>
             </div>
 
             <div class="mic-section">
                 <button id="mic-btn" class="mic-glow">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"
+                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                         <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
@@ -42,36 +36,47 @@
                         <line x1="8" y1="23" x2="16" y2="23"></line>
                     </svg>
                 </button>
-                <p id="status-text">Tap to start listening</p>
             </div>
+            
+            <div id="live-transcript" class="live-text">...</div>
         </section>
 
         <section class="results">
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fi">FI</button>
+                <button class="lang-btn" data-lang="fa">Persian</button>
+                <button id="interpreter-mode-btn" class="interpreter-btn">
+                    <span class="icon">🤖</span> Live Interpreter
+                </button>
+            </div>
+            
+            <div id="interpreter-status" class="interpreter-status hidden">
+                <span class="pulse-dot"></span>
+                <span id="interpreter-text">Interpreter Active</span>
+            </div>
             <div class="input-grid">
                 <div class="result-card">
-                    <h3>English Input</h3>
-                    <textarea id="english-box" class="text-box" placeholder="Type or speak English..."></textarea>
+                    <div class="card-header">
+                        <h3>Input <span id="source-lang-tag">(Detection On)</span></h3>
+                    </div>
+                    <textarea id="source-box" class="text-box" placeholder="Speak or type..."></textarea>
                 </div>
 
                 <div class="result-card">
-                    <h3>Persian Input</h3>
-                    <textarea id="persian-box" class="text-box" placeholder="Type or speak Persian..." dir="rtl"></textarea>
+                    <div class="card-header">
+                        <h3>Translation <span id="target-lang-tag">(Output)</span></h3>
+                        <button id="speak-btn" title="Hear Pronunciation">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        </button>
+                    </div>
+                    <div id="translation-box" class="text-box highlight">...</div>
                 </div>
-            </div>
-
-            <div class="result-card full-width">
-                <div class="card-header">
-                    <h3>Translated <span id="target-lang-tag">(Output)</span></h3>
-                    <button id="speak-btn" title="Hear Pronunciation">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                    </button>
-                </div>
-                <div id="translation-box" class="text-box highlight">...</div>
             </div>
         </section>
 
         <footer>
-            <p>Powered by Web Speech & MyMemory API</p>
+            <p>Zero-Touch Translation • Auto-Detection • Instant Speech</p>
         </footer>
     </main>
 

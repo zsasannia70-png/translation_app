@@ -1,25 +1,51 @@
 const micBtn = document.getElementById('mic-btn');
 const langBtns = document.querySelectorAll('.lang-btn');
 const statusText = document.getElementById('status-text');
-const englishBox = document.getElementById('english-box');
-const persianBox = document.getElementById('persian-box');
+const transcriptBox = document.getElementById('transcript-box');
 const translationBox = document.getElementById('translation-box');
+const sourceTag = document.getElementById('source-lang-tag');
 const targetTag = document.getElementById('target-lang-tag');
 const webcam = document.getElementById('webcam');
 const subtitleOverlay = document.getElementById('subtitle-overlay');
-const speakBtn = document.getElementById('speak-btn');
+const interpreterBtn = document.getElementById('interpreter-mode-btn');
+const interpreterStatus = document.getElementById('interpreter-status');
+const interpreterText = document.getElementById('interpreter-text');
 
 // Language state
 let currentLang = 'en';
+let isInterpreterMode = false;
 const langMap = {
-    'en': { name: 'English', code: 'en-US', target: 'fi' },
-    'fi': { name: 'Finnish', code: 'fi-FI', target: 'en' },
-    'fa': { name: 'Persian', code: 'fa-IR', target: 'fi' }
+    'en': { name: 'English', code: 'en-US', target: 'fi', voice: 'fi-FI' },
+    'fi': { name: 'Finnish', code: 'fi-FI', target: 'fa', voice: 'fa-IR' },
+    'fa': { name: 'Persian', code: 'fa-IR', target: 'fi', voice: 'fi-FI' }
 };
 
 let recognition;
 let isListening = false;
 let stream;
+
+// TTS Setup
+const synth = window.speechSynthesis;
+
+function speak(text, langCode) {
+    if (synth.speaking) synth.cancel();
+    
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = langCode;
+    utter.rate = 1.0;
+    utter.pitch = 1.0;
+    
+    utter.onstart = () => {
+        transcriptBox.parentElement.classList.add('speaking-glow');
+        if (isInterpreterMode) interpreterText.innerText = "Speaking translation...";
+    };
+    utter.onend = () => {
+        transcriptBox.parentElement.classList.remove('speaking-glow');
+        if (isInterpreterMode) interpreterText.innerText = "Interpreter Active";
+    };
+    
+    synth.speak(utter);
+}
 
 async function initWebcam() {
     try {
@@ -73,13 +99,13 @@ if ('webkitSpeechRecognition' in window) {
 
         const textToTranslate = finalTranscript || interimTranscript;
         if (textToTranslate) {
-            if (currentLang === 'fa') {
-                persianBox.value = textToTranslate;
-            } else {
-                englishBox.value = textToTranslate;
+            transcriptBox.innerText = textToTranslate;
+            subtitleOverlay.innerText = ''; // Clear old subtitles immediately
+            
+            // Only translate/speak when we have a "final" sentence feel (or in manual mode)
+            if (finalTranscript || !isInterpreterMode) {
+                translateAndInterpret(textToTranslate);
             }
-            subtitleOverlay.innerText = ''; 
-            translateText(textToTranslate, currentLang);
         }
     };
 } else {
@@ -87,25 +113,28 @@ if ('webkitSpeechRecognition' in window) {
     micBtn.disabled = true;
 }
 
+// Interpreter Mode Logic
+interpreterBtn.addEventListener('click', () => {
+    isInterpreterMode = !isInterpreterMode;
+    interpreterBtn.classList.toggle('active', isInterpreterMode);
+    interpreterStatus.classList.toggle('hidden', !isInterpreterMode);
+    
+    if (isInterpreterMode) {
+        statusText.innerText = "Interpreter Mode Engaged";
+        if (!isListening) startListening();
+    }
+});
+
 // Language Picker Logic
 langBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+        if (isInterpreterMode) return; // Disable manual switch during interpreter mode
+        
         langBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
         currentLang = btn.dataset.lang;
-        const config = langMap[currentLang];
-        
-        targetTag.innerText = `(${langMap[config.target].name})`;
-        
-        if (recognition) {
-            recognition.lang = config.code;
-        }
-        
-        // Reset boxes
-        englishBox.value = '';
-        persianBox.value = '';
-        translationBox.innerText = '...';
+        updateUIForLang();
         
         if (isListening) {
             recognition.stop();
@@ -113,6 +142,24 @@ langBtns.forEach(btn => {
         }
     });
 });
+
+function updateUIForLang() {
+    const config = langMap[currentLang];
+    sourceTag.innerText = `(${config.name})`;
+    targetTag.innerText = `(${langMap[config.target].name})`;
+    
+    if (recognition) {
+        recognition.lang = config.code;
+        transcriptBox.style.direction = (currentLang === 'fa') ? 'rtl' : 'ltr';
+        subtitleOverlay.style.direction = (currentLang === 'fa') ? 'rtl' : 'ltr';
+    }
+    
+    transcriptBox.innerText = '...';
+    translationBox.innerText = '...';
+}
+
+// Set default language
+if (recognition) recognition.lang = 'en-US';
 
 // Microphone Toggle
 micBtn.addEventListener('click', () => {
@@ -134,57 +181,63 @@ function stopListening() {
 }
 
 // Manual Text Input Logic
-englishBox.addEventListener('input', () => {
-    translateText(englishBox.value, 'en');
+transcriptBox.addEventListener('input', () => {
+    const text = transcriptBox.innerText;
+    subtitleOverlay.innerText = ''; 
+    translateAndInterpret(text);
 });
 
-persianBox.addEventListener('input', () => {
-    translateText(persianBox.value, 'fa');
-});
-
-// Finnish Pronunciation logic
-speakBtn.addEventListener('click', () => {
-    const text = translationBox.innerText;
-    if (text && text !== '...' && text !== 'Translating...' && text !== 'Translation error...') {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'fi-FI';
-        window.speechSynthesis.speak(utterance);
-        
-        // Visual feedback
-        speakBtn.classList.add('speaking');
-        utterance.onend = () => speakBtn.classList.remove('speaking');
-    }
-});
-
-// Translation Logic
+// Advanced Translation & Interpreter Logic
 let translationTimeout;
-async function translateText(text, sourceLang) {
-    if (!text.trim()) {
-        translationBox.innerText = '...';
-        subtitleOverlay.innerText = '';
-        return;
-    }
-
-    translationBox.innerText = 'Translating...';
+async function translateAndInterpret(text) {
+    if (!text.trim() || text === '...') return;
 
     clearTimeout(translationTimeout);
     translationTimeout = setTimeout(async () => {
-        // Force target to Finnish as per request
-        const targetLang = 'fi';
-        
         try {
-            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`);
-            const data = await response.json();
+            // If in Interpreter Mode, try to detect language first
+            let sourceLang = currentLang;
+            let targetLang = langMap[currentLang].target;
+
+            // MyMemory handles autodetection if we use 'autodetect'
+            const apiLangPair = isInterpreterMode ? `autodetect|fi` : `${sourceLang}|${targetLang}`;
+            
+            let response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${apiLangPair}`);
+            let data = await response.json();
             
             if (data.responseData) {
+                let detectedLang = data.matches[0].usage_count > 0 ? data.matches[0].segment.split('|')[0] : 'en'; 
+                // Note: MyMemory response structure can vary, but we can also infer from data.responseData.translatedText
+                
+                // If we detected Finnish but was targeting Finnish, switch to Persian
+                if (isInterpreterMode) {
+                    const matchesDetection = data.matches.find(m => m.id); // Simple heuristic
+                    // If the result looks like it was already Finnish or the API says so
+                    if (data.matches.some(m => m.subject === "Finnish" || text.toLowerCase().includes("terve"))) {
+                         // Likely Finnish input
+                         targetLang = 'fa';
+                         sourceLang = 'fi';
+                         // Re-fetch for Persian
+                         response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=fi|fa`);
+                         data = await response.json();
+                    } else {
+                         // Likely EN or FA input -> already translated to FI
+                         targetLang = 'fi';
+                    }
+                }
+
                 const translated = data.responseData.translatedText;
                 translationBox.innerText = translated;
                 subtitleOverlay.innerText = translated;
-                subtitleOverlay.style.direction = 'ltr'; // Finnish is LTR
+                subtitleOverlay.style.direction = (targetLang === 'fa') ? 'rtl' : 'ltr';
+
+                // Automatically Read Aloud
+                if (isInterpreterMode || true) { // User rule #6: Do not require button press
+                    speak(translated, langMap[targetLang === 'fa' ? 'fa' : 'fi'].code);
+                }
             }
         } catch (error) {
-            console.error('Translation error:', error);
-            translationBox.innerText = 'Translation error...';
+            console.error('Interpreter Error:', error);
         }
-    }, 500);
+    }, 800);
 }
