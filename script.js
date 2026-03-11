@@ -44,16 +44,44 @@ function speak(text, langCode) {
     synth.speak(utter);
 }
 
+// 🌸 Auto-Detection Heuristics
+function detectLanguage(text) {
+    const persianRegex = /[\u0600-\u06FF]/;
+    const finnishRegex = /[äöåÄÖÅ]/;
+    
+    if (persianRegex.test(text)) return 'fa';
+    if (finnishRegex.test(text)) return 'fi';
+    return 'en'; // Default to English if no clear markers
+}
+
+// 🌸 Recognition Pivot (Smart Listening)
+function pivotRecognition(lang) {
+    if (!recognition || !isInterpreterMode) return;
+    const targetCode = langMap[lang].code;
+    
+    if (recognition.lang !== targetCode) {
+        console.log(`Pivoting listener to: ${targetCode}`);
+        recognition.lang = targetCode;
+        
+        // Restart recognition to apply new language hint
+        if (isListening) {
+            recognition.stop();
+            // recognition.onend will handle the restart
+        }
+    }
+}
+
 // Initialize Speech Recognition
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
+    recognition.lang = 'en-US';
 
     recognition.onstart = () => {
         isListening = true;
         micBtn.classList.add('listening');
-        statusText.innerText = isInterpreterMode ? 'Interpreting Live' : 'Listening...';
+        statusText.innerText = isInterpreterMode ? 'Truly Auto' : 'Listening...';
         lastProcessedIndex = -1;
     };
 
@@ -76,6 +104,15 @@ if ('webkitSpeechRecognition' in window) {
 
         if (interimTranscript) {
             sourceBox.value = interimTranscript;
+            
+            // 🌸 Real-time Pivot Attempt (even on interim)
+            if (isInterpreterMode && interimTranscript.length > 5) {
+                const detected = detectLanguage(interimTranscript);
+                if (detected !== 'en' && recognition.lang !== langMap[detected].code) {
+                   // Only pivot if we are reasonably sure
+                   // pivotRecognition(detected); 
+                }
+            }
         }
     };
 
@@ -99,7 +136,7 @@ if ('webkitSpeechRecognition' in window) {
     };
 }
 
-// Truly Auto Detection Logic
+// Truly Auto Logic
 let debounceTimeout;
 async function processInterpretation(text) {
     if (!text.trim() || text === '...') return;
@@ -107,48 +144,32 @@ async function processInterpretation(text) {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(async () => {
         try {
-            // In Truly Auto mode, we let MyMemory detect the language
-            // By default, we assume it's English/Persian to Finnish
-            let langPair = isInterpreterMode ? `autodetect|fi` : `${currentLang}|${langMap[currentLang].target}`;
-            
-            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`);
+            let detected = detectLanguage(text);
+            let sLang = isInterpreterMode ? detected : currentLang;
+            let finalTarget = 'fi'; 
+
+            // Logic: EN/FA -> FI, FI -> FA
+            if (sLang === 'fi') finalTarget = 'fa';
+            else finalTarget = 'fi';
+
+            console.log(`Input Detected: ${sLang} -> Targeting: ${finalTarget}`);
+
+            const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sLang}|${finalTarget}`);
             const data = await response.json();
             
             if (data.responseData) {
                 let translatedText = data.responseData.translatedText;
-                let finalTarget = 'fi'; 
-
-                // Bi-directional heuristic (Fixed)
-                if (isInterpreterMode) {
-                    // Check if input was actually Finnish
-                    const isFinnishInput = text.toLowerCase().match(/[äöå]/) || 
-                                         (data.matches && data.matches.some(m => m.subject === "Finnish")) ||
-                                         (translatedText.toLowerCase().trim() === text.toLowerCase().trim());
-
-                    if (isFinnishInput) {
-                        // Switch to Persian output
-                        const reRes = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=fi|fa`);
-                        const reData = await reRes.json();
-                        translatedText = reData.responseData.translatedText;
-                        finalTarget = 'fa';
-                        
-                        // Smart Auto-Hint: Update future listening to FI
-                        if (recognition) recognition.lang = 'fi-FI';
-                    } else {
-                        // Smart Auto-Hint: Update future listening to EN or FA based on detected
-                        // (Usually stays EN-US as it's the broadest for "non-FI")
-                        if (text.match(/[آ-ی]/)) recognition.lang = 'fa-IR';
-                        else recognition.lang = 'en-US';
-                    }
-                }
-
                 translationBox.innerText = translatedText;
                 speak(translatedText, langMap[finalTarget].code);
                 
-                // Update Tags dynamically
                 if (isInterpreterMode) {
-                    sourceTag.innerText = `(Auto-Detected)`;
-                    targetTag.innerText = `(${langMap[finalTarget].name})`;
+                    sourceTag.innerText = `Detected: ${langMap[sLang].name}`;
+                    targetTag.innerText = `Target: ${langMap[finalTarget].name}`;
+                    
+                    // 🌸 Smart Pivot for NEXT sentence
+                    // If we just spoke Finnish, we should listen for Finnish next (or English/Persian)
+                    // The pivot is most important when switching from a Latin-based language to Persian
+                    pivotRecognition(sLang); 
                 }
             }
         } catch (e) { console.error(e); }
@@ -160,12 +181,12 @@ interpreterBtn.addEventListener('click', () => {
     isInterpreterMode = !isInterpreterMode;
     interpreterBtn.classList.toggle('active');
     interpreterStatus.classList.toggle('hidden');
-    manualLangs.classList.toggle('hidden'); // Hide manual buttons
+    manualLangs.classList.toggle('hidden');
     
     if (isInterpreterMode) {
         statusText.innerText = "Truly Auto Mode";
-        sourceTag.innerText = "(Auto-Detection On)";
-        targetTag.innerText = "(Smart Output)";
+        sourceTag.innerText = "(Detecting...)";
+        targetTag.innerText = "(Interpreting...)";
         if (!isListening) startListening();
     } else {
         updateUI();
@@ -203,5 +224,4 @@ function stopListening() { recognition.stop(); isListening = false; }
 
 sourceBox.addEventListener('input', () => processInterpretation(sourceBox.value));
 
-// Init UI
 updateUI();
