@@ -1,51 +1,31 @@
-# Zahra's Translation App | Video Subtitles & Translator
+# Zahra's Translation App | Tri-Language Video Translator
 
-Zahra's Translation App is a modern, real-time voice and video translator specifically designed for low-latency translation between English and Finnish. It features a live webcam feed with real-time subtitles and a clean green-and-white theme.
+Zahra's Translation App is a modern, real-time voice and video translator specifically designed for low-latency translation between English, Finnish, and Farsi. It features a live webcam feed with real-time subtitles, Right-to-Left (RTL) support for Farsi, and a clean green-and-white theme.
 
 **🌐 [Live Demo](https://zsasannia70-png.github.io/translation_app/)**
 
 ## ✨ Features
 
-- **Live Voice Input**: Real-time transcription using the Web Speech API.
-- **Bi-directional Translation**: Easily toggle between **English -> Finnish** and **Finnish -> English**.
-- **Zero Latency Feel**: Optimized for immediate feedback with live transcript display.
-- **Premium UI**: 
-    - Dark mode by default.
-    - Animated background blobs for a dynamic feel.
-    - Responsive glassmorphism container.
-    - Interactive microphone pulse animations.
+- **Tri-Language Support**: Seamlessly switch between **English**, **Finnish**, and **Farsi**.
+- **Live Video Subtitles**: Real-time transcription and translation displayed directly on your video feed.
+- **RTL Support**: Automatic text direction adjustment for Farsi subtitles.
+- **Zero Latency Feel**: Optimized for immediate feedback.
+- **Premium UI**: Clean green-and-white theme with interactive animations.
 
 ## 🛠️ Technology Stack
 
-- **HTML5/CSS3**: Semantic structure and advanced styling (Gradients, Glassmorphism).
+- **HTML5/CSS3**: Semantic structure and advanced styling.
 - **JavaScript (Vanilla)**: Core logic for speech recognition and API interaction.
-- **Web Speech API (`webkitSpeechRecognition`)**: Handles the audio stream and voice-to-text conversion locally in the browser.
-- **MyMemory API**: Provides high-quality translations without requiring complex backend setup.
+- **Web Speech API**: Browser-native voice-to-text conversion.
+- **MyMemory API**: High-quality translation service.
 
 ## 🚀 Getting Started
 
-### Prerequisites
-
-- A modern browser that supports the Web Speech API (Google Chrome or Microsoft Edge recommended).
-- Microphone access.
-- Active internet connection for translations.
-
-### How to Run
-
-1. **Option A (Simple)**: Just open the `index.html` file directly in your browser.
-2. **Option B (Recommended)**: Serve the files using a local server to avoid potential `file://` protocol restrictions.
-   ```bash
-   npx serve .
-   ```
-
-## 🎮 Usage
-
-1. **Start Listening**: Click the glowing purple microphone button. Grant microphone permissions if prompted.
-2. **Speak**: Start talking! Your words will appear in the "Original" box immediately.
-3. **Translation**: The translated text will appear in the "Translated" box after you finish speaking a phrase.
-4. **Switch Languages**: Flip the toggle switch at the top to change the translation direction (EN-FI or FI-EN).
-5. **Stop**: Tap the microphone button again (it will turn green while active and pulse).
+1.  Open [Live Demo](https://zsasannia70-png.github.io/translation_app/) in Chrome or Edge.
+2.  Allow **Microphone** and **Camera** permissions.
+3.  Select your input language (EN, FI, or FA).
+4.  Speak naturally and see subtitles overlayed on your video.
 
 ## 📄 License
 
-This project is created for educational purposes as part of the "AI in Practice" lessons.
+Created for educational purposes (AI in Practice).
