@@ -6,10 +6,10 @@ Zahra's Translation App is a modern, real-time voice and video translator specif
 
 ## ✨ Features
 
-- **Horizontal UI Overhaul**: Modern landscape layout for improved productivity.
+- **Centered UI**: Clean, single-column centered layout for focused interaction.
+- **Pale Blue Theme**: A calming blue aesthetic with premium glassmorphism effects.
 - **Split Input Fields**: Dedicated real-time textboxes for **English** and **Persian**.
 - **Finnish Pronunciation**: One-click text-to-speech for all translated outputs.
-- **Floral Aesthetic**: Premium pink cherry blossom background decorations.
 - **RTL Support**: Native text direction handling for Persian.
 - **Real-time Video Subtitles**: Live transcription overlayed directly on the webcam feed.
 
