@@ -6,10 +6,10 @@ Zahra's Translation App is a modern, real-time voice and video translator specif
 
 ## ✨ Features
 
-- **Tri-Language Support**: Seamlessly switch between **English**, **Finnish**, and **Farsi**.
+- **Tri-Language Support**: Seamlessly switch between **English**, **Finnish**, and **Persian**.
+- **Finnish Translation Target**: Both **English** and **Persian** inputs now translate directly into **Finnish** subtitles.
 - **Live Video Subtitles**: Real-time transcription and translation displayed directly on your video feed.
-- **RTL Support**: Automatic text direction adjustment for Farsi subtitles.
-- **Zero Latency Feel**: Optimized for immediate feedback.
+- **RTL Support**: Automatic text direction adjustment for Persian input.
 - **Premium UI**: Clean green-and-white theme with interactive animations.
 
 ## 🛠️ Technology Stack

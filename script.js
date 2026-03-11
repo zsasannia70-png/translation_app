@@ -13,7 +13,7 @@ let currentLang = 'en';
 const langMap = {
     'en': { name: 'English', code: 'en-US', target: 'fi' },
     'fi': { name: 'Finnish', code: 'fi-FI', target: 'en' },
-    'fa': { name: 'Persian', code: 'fa-IR', target: 'en' }
+    'fa': { name: 'Persian', code: 'fa-IR', target: 'fi' }
 };
 
 let recognition;
