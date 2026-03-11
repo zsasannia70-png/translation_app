@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoniTranslate | EN-FI Voice Translator</title>
+    <meta name="description" content="Real-time voice-to-text translator for English and Finnish with zero latency feel.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    
+    <main class="glass-container">
+        <header>
+            <h1>Soni<span>Translate</span></h1>
+            <p class="subtitle">Real-time Voice Translation</p>
+        </header>
+
+        <section class="controls">
+            <div class="toggle-container">
+                <span id="label-en" class="lang-label active">English</span>
+                <label class="switch">
+                    <input type="checkbox" id="lang-toggle">
+                    <span class="slider round"></span>
+                </label>
+                <span id="label-fi" class="lang-label">Finnish</span>
+            </div>
+            
+            <div class="mic-section">
+                <button id="mic-btn" class="mic-glow">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </button>
+                <p id="status-text">Tap to start listening</p>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="result-card">
+                <h3>Original <span id="source-lang-tag">(English)</span></h3>
+                <div id="transcript-box" class="text-box">...</div>
+            </div>
+            
+            <div class="result-card">
+                <h3>Translated <span id="target-lang-tag">(Finnish)</span></h3>
+                <div id="translation-box" class="text-box highlight">...</div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Powered by Web Speech & MyMemory API</p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
