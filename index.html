@@ -14,6 +14,11 @@
 </head>
 
 <body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
     <main class="glass-container">
         <header>
             <h1>Zahra's <span>Translator</span></h1>
@@ -21,14 +26,14 @@
         </header>
 
         <section class="controls">
-            <div class="status-indicator">
-                <div id="status-pulse" class="pulse"></div>
-                <p id="status-text">Tap the mic to begin</p>
+            <div id="interpreter-status" class="interpreter-status hidden">
+                <span class="pulse-dot"></span>
+                <span id="interpreter-text">Interpreter Active</span>
             </div>
 
             <div class="mic-section">
                 <button id="mic-btn" class="mic-glow">
-                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2"
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                         <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
@@ -38,7 +43,7 @@
                 </button>
             </div>
             
-            <div id="live-transcript" class="live-text">...</div>
+            <p id="status-text" class="status-minimal">Tap to start</p>
         </section>
 
         <section class="results">
@@ -46,14 +51,10 @@
                 <button class="lang-btn active" data-lang="en">EN</button>
                 <button class="lang-btn" data-lang="fi">FI</button>
                 <button class="lang-btn" data-lang="fa">Persian</button>
+                <div class="divider"></div>
                 <button id="interpreter-mode-btn" class="interpreter-btn">
-                    <span class="icon">🤖</span> Live Interpreter
+                    <span class="icon">🤖</span> Auto Interpreter
                 </button>
-            </div>
-            
-            <div id="interpreter-status" class="interpreter-status hidden">
-                <span class="pulse-dot"></span>
-                <span id="interpreter-text">Interpreter Active</span>
             </div>
             <div class="input-grid">
                 <div class="result-card">
