@@ -23,6 +23,9 @@ let recognition;
 let isListening = false;
 const synth = window.speechSynthesis;
 
+// To track already processed sentences
+let lastProcessedIndex = -1;
+
 // TTS with auto-clear
 function speak(text, langCode) {
     if (!text || !langCode) return;
@@ -41,7 +44,6 @@ function speak(text, langCode) {
         translationBox.parentElement.classList.remove('speaking-glow');
         if (speakBtn) speakBtn.classList.remove('speaking');
     };
-    utter.onerror = (e) => console.error("TTS Error:", e);
     
     synth.speak(utter);
 }
@@ -53,52 +55,49 @@ if ('webkitSpeechRecognition' in window) {
     recognition.interimResults = true;
 
     recognition.onstart = () => {
-        console.log("Recognition started");
         isListening = true;
         micBtn.classList.add('listening');
-        statusText.innerText = isInterpreterMode ? 'Interpreting Live' : 'Listening...';
-    };
-
-    recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        statusText.innerText = 'Error: ' + event.error;
-        if (event.error === 'not-allowed') {
-            statusText.innerText = 'Microphone blocked';
-        }
-        stopListening();
+        statusText.innerText = isInterpreterMode ? 'Interpreter Active' : 'Listening...';
+        lastProcessedIndex = -1; // Reset index on new session
     };
 
     recognition.onresult = (event) => {
-        let finalTranscript = '';
         let interimTranscript = '';
-
+        
+        // We only process the NEW final result to avoid repetition
         for (let i = event.resultIndex; i < event.results.length; ++i) {
+            const transcript = event.results[i][0].transcript;
+            
             if (event.results[i].isFinal) {
-                finalTranscript += event.results[i][0].transcript;
+                // If this is a new final index we haven't processed yet
+                if (i > lastProcessedIndex) {
+                    console.log("New Final Sentence:", transcript);
+                    sourceBox.value = transcript; // Only show the current sentence to avoid clutter
+                    processInterpretation(transcript);
+                    lastProcessedIndex = i;
+                }
             } else {
-                interimTranscript += event.results[i][0].transcript;
+                interimTranscript += transcript;
             }
         }
 
-        const transcript = finalTranscript || interimTranscript;
-        if (transcript) {
-            sourceBox.value = transcript;
-            console.log("Transcript:", transcript);
-            
-            // Sentence-by-sentence logic - trigger on pauses (final results)
-            if (finalTranscript || !isInterpreterMode) {
-                processInterpretation(transcript);
-            }
+        // Show interim text for feedback
+        if (interimTranscript) {
+            sourceBox.value = interimTranscript;
         }
     };
 
+    recognition.onerror = (event) => {
+        console.error('Recognition error:', event.error);
+        statusText.innerText = 'Error: ' + event.error;
+        stopListening();
+    };
+
     recognition.onend = () => {
-        console.log("Recognition ended");
         if (isListening) {
             try {
                 recognition.start();
             } catch (e) {
-                console.warn("Recognition restart failed, retrying...", e);
                 setTimeout(() => isListening && recognition.start(), 500);
             }
         } else {
@@ -106,12 +105,9 @@ if ('webkitSpeechRecognition' in window) {
             statusText.innerText = 'Tap to start';
         }
     };
-} else {
-    statusText.innerText = 'Speech API not supported';
-    micBtn.disabled = true;
 }
 
-// Logic to process text (Auto-detect & Translate)
+// Logic to process text
 let debounceTimeout;
 function processInterpretation(text) {
     if (!text.trim() || text === '...') return;
@@ -119,12 +115,9 @@ function processInterpretation(text) {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(async () => {
         try {
-            console.log("Processing text for translation...");
             let sLang = currentLang;
             let tLang = langMap[currentLang].target;
 
-            // In Interpreter Mode, we use 'autodetect' but MyMemory's 'autodetect' is mostly for source.
-            // We want to detect if it's Finnish (FI) or (EN/FA)
             const langPair = isInterpreterMode ? `autodetect|fi` : `${sLang}|${tLang}`;
             
             const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${langPair}`);
@@ -134,16 +127,12 @@ function processInterpretation(text) {
                 let translatedText = data.responseData.translatedText;
                 let finalTarget = isInterpreterMode ? 'fi' : tLang;
 
-                // Smart Heuristic for bi-directional Interpreter mode
                 if (isInterpreterMode) {
-                    // Check if input was already Finnish (so translation is redundant or same)
-                    // Or if specific Finnish characters are present
                     const isFinnishInput = text.toLowerCase().match(/[äöå]/) || 
                                          (data.matches && data.matches.some(m => m.subject === "Finnish")) ||
                                          (translatedText.toLowerCase().trim() === text.toLowerCase().trim());
 
                     if (isFinnishInput) {
-                        console.log("Detected Finnish input, translating to Persian...");
                         const reRes = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=fi|fa`);
                         const reData = await reRes.json();
                         translatedText = reData.responseData.translatedText;
@@ -156,19 +145,18 @@ function processInterpretation(text) {
             }
         } catch (e) { 
             console.error("Translation Error:", e);
-            translationBox.innerText = "Error: Connection issue";
         }
-    }, 600);
+    }, 400); // Faster response
 }
 
-// Mode & Manual Lang Switching
+// UI Handlers
 interpreterBtn.addEventListener('click', () => {
     isInterpreterMode = !isInterpreterMode;
     interpreterBtn.classList.toggle('active');
     interpreterStatus.classList.toggle('hidden');
     
     if (isInterpreterMode) {
-        statusText.innerText = "Interpreter Mode Engaged";
+        statusText.innerText = "Engaged";
         if (!isListening) startListening();
     } else {
         updateUI();
@@ -185,15 +173,10 @@ langBtns.forEach(btn => {
     });
 });
 
-if (speakBtn) {
-    speakBtn.addEventListener('click', () => {
-        const text = translationBox.innerText;
-        if (text && text !== '...') {
-            const tLang = isInterpreterMode ? (translationBox.innerText.match(/[آ-ی]/) ? 'fa' : 'fi') : langMap[currentLang].target;
-            speak(text, langMap[tLang].code);
-        }
-    });
-}
+micBtn.addEventListener('click', () => {
+    if (isListening) stopListening();
+    else startListening();
+});
 
 function updateUI() {
     const config = langMap[currentLang];
@@ -205,28 +188,9 @@ function updateUI() {
     translationBox.innerText = '...';
 }
 
-micBtn.addEventListener('click', () => {
-    if (isListening) stopListening();
-    else startListening();
-});
-
-function startListening() { 
-    if (!recognition) return;
-    try {
-        recognition.start(); 
-        isListening = true; 
-    } catch (e) {
-        console.error("Failed to start recognition:", e);
-    }
-}
-
-function stopListening() { 
-    if (!recognition) return;
-    recognition.stop(); 
-    isListening = false; 
-}
+function startListening() { recognition.start(); isListening = true; }
+function stopListening() { recognition.stop(); isListening = false; }
 
 sourceBox.addEventListener('input', () => processInterpretation(sourceBox.value));
 
-// Initial UI sync
 updateUI();
