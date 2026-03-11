@@ -41,3 +41,11 @@ This project was developed in collaboration with **Antigravity**, an AI coding a
 - **Documentation**: We generated a comprehensive `README.md` to provide a quick start guide and feature overview.
 - **Version Control**: Finally, the entire project was committed and pushed to the GitHub repository to finalize the development cycle.
 
+## 7. Major UI Overhaul & Feature Expansion
+In the final stage, we implemented a significant architecture and feature upgrade:
+- **Landscape Layout**: Shifted from a vertical stacked design to a professional horizontal two-column layout using CSS Flexbox.
+- **Dual Input Architecture**: Created a split-screen input system for English and Persian, allowing users to type or speak in multiple languages simultaneously with automatic Finnish translation.
+- **Finnish Text-to-Speech (TTS)**: Integrated the `SpeechSynthesis` API with a dedicated "Play" icon to provide high-quality Finnish pronunciation for all results.
+- **Floral Decorations**: Enhanced the visual layer with animated pink floral assets from the `assets/` directory, harmonized with the existing pink glassmorphism theme.
+- **Global Finnish Target**: Centralized the translation logic to always prioritize Finnish as the output language, catering to the primary goal of the application.
+
