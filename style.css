@@ -3,12 +3,12 @@
     --primary-light: #f472b6;
     --secondary: #fbc2eb;
     --accent: #fb7185;
-    --bg-light: #fffdfd;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.8);
+    --bg-light: #f0f7ff; /* Pale Blue Background */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.9);
     --text-main: #1e293b;
     --text-dim: #64748b;
-    --card-shadow: 0 20px 40px -15px rgba(236, 72, 153, 0.1);
+    --card-shadow: 0 20px 40px -15px rgba(236, 72, 153, 0.15);
 }
 
 * {
@@ -19,7 +19,7 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background: #fdfbfb;
+    background: var(--bg-light);
     color: var(--text-main);
     min-height: 100vh;
     display: flex;
