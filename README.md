@@ -10,7 +10,7 @@ Zahra's Translation App is a modern, real-time voice and video translator specif
 - **Finnish Translation Target**: Both **English** and **Persian** inputs now translate directly into **Finnish** subtitles.
 - **Live Video Subtitles**: Real-time transcription and translation displayed directly on your video feed.
 - **RTL Support**: Automatic text direction adjustment for Persian input.
-- **Premium UI**: Clean green-and-white theme with interactive animations.
+- **Premium UI**: Clean pink-and-white theme with interactive animations.
 
 ## 🛠️ Technology Stack
 
