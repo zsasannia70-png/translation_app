@@ -41,10 +41,10 @@ This project was developed in collaboration with **Antigravity**, an AI coding a
 - **Documentation**: We generated a comprehensive `README.md` to provide a quick start guide and feature overview.
 - **Version Control**: Finally, the entire project was committed and pushed to the GitHub repository to finalize the development cycle.
 
-## 7. Refined Centered Layout & Blue Theme
+## 7. Refined Centered Layout & Pink Theme
 In the final polish, we adjusted the app based on user feedback to prioritize simplicity and focus:
 - **Centered Architecture**: Reverted the horizontal landscape layout back to a clean, single-column centered design. This ensures the main translation features are the central focus of the user experience.
-- **Pale Blue Aesthetic**: Transitioned the entire theme from pink to a calming pale blue palette, including background blobs and glassmorphism accents.
+- **Pale Pink Aesthetic**: Transitioned the entire theme to a simple, calming pale pink palette, removing distracting background animations for a cleaner look.
 - **Dual Input Continuity**: Maintained the split-screen input system for English and Persian, ensuring powerful multi-language support remains accessible in the streamlined layout.
 - **Finnish Pronunciation**: Kept the high-quality Finnish TTS feature, allowing users to hear translations with a single tap.
 - **Global Finnish Target**: The translation engine remains locked to Finnish output, providing a reliable tool for Finnish language learners and users.
