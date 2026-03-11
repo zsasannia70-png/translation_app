@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zahra's Translation App</title>
-    <meta name="description" content="Real-time voice-to-text translator for English and Finnish with zero latency feel.">
+    <meta name="description"
+        content="Real-time voice-to-text translator for English and Finnish with zero latency feel.">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="background-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
         <div class="blob blob-3"></div>
     </div>
-    
+
     <main class="glass-container">
         <header>
             <h1>Zahra's <span>Translation App</span></h1>
@@ -29,7 +32,7 @@
                 <button class="lang-btn" data-lang="fi">FI</button>
                 <button class="lang-btn" data-lang="fa">Persian</button>
             </div>
-            
+
             <div class="video-container">
                 <video id="webcam" autoplay playsinline muted></video>
                 <div id="subtitle-overlay" class="subtitle-text">...</div>
@@ -37,7 +40,8 @@
 
             <div class="mic-section">
                 <button id="mic-btn" class="mic-glow">
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
                         <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                         <line x1="12" y1="19" x2="12" y2="23"></line>
@@ -51,9 +55,10 @@
         <section class="results">
             <div class="result-card">
                 <h3>Original <span id="source-lang-tag">(English)</span></h3>
-                <div id="transcript-box" class="text-box" contenteditable="true" placeholder="Speak or type here...">...</div>
+                <div id="transcript-box" class="text-box" contenteditable="true" placeholder="Speak or type here...">...
+                </div>
             </div>
-            
+
             <div class="result-card">
                 <h3>Translated <span id="target-lang-tag">(Output)</span></h3>
                 <div id="translation-box" class="text-box highlight">...</div>
@@ -67,4 +72,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

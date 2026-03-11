@@ -73,7 +73,7 @@ if ('webkitSpeechRecognition' in window) {
         const textToTranslate = finalTranscript || interimTranscript;
         if (textToTranslate) {
             transcriptBox.innerText = textToTranslate;
-            subtitleOverlay.innerText = textToTranslate;
+            // subtitleOverlay.innerText = textToTranslate; // Removed to only show translation
             translateText(textToTranslate);
         }
     };
@@ -137,7 +137,7 @@ function stopListening() {
 // Manual Text Input Logic
 transcriptBox.addEventListener('input', () => {
     const text = transcriptBox.innerText;
-    subtitleOverlay.innerText = text;
+    // subtitleOverlay.innerText = text; // Removed to only show translation
     translateText(text);
 });
 
