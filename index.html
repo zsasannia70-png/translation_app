@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoniTranslate | EN-FI Voice Translator</title>
+    <title>Zahra's Translation App | EN-FI Voice Translator</title>
     <meta name="description" content="Real-time voice-to-text translator for English and Finnish with zero latency feel.">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,8 +19,8 @@
     
     <main class="glass-container">
         <header>
-            <h1>Soni<span>Translate</span></h1>
-            <p class="subtitle">Real-time Voice Translation</p>
+            <h1>Zahra's <span>Translate</span></h1>
+            <p class="subtitle">Real-time Video Subtitles & Translation</p>
         </header>
 
         <section class="controls">
@@ -33,6 +33,11 @@
                 <span id="label-fi" class="lang-label">Finnish</span>
             </div>
             
+            <div class="video-container">
+                <video id="webcam" autoplay playsinline muted></video>
+                <div id="subtitle-overlay" class="subtitle-text">...</div>
+            </div>
+
             <div class="mic-section">
                 <button id="mic-btn" class="mic-glow">
                     <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -1,6 +1,6 @@
-# SoniTranslate | Voice-to-Text Translator
+# Zahra's Translation App | Video Subtitles & Translator
 
-SoniTranslate is a modern, real-time voice translator specifically designed for low-latency translation between English and Finnish. It features a sleek glassmorphism interface and leverages powerful browser-native APIs for a seamless user experience.
+Zahra's Translation App is a modern, real-time voice and video translator specifically designed for low-latency translation between English and Finnish. It features a live webcam feed with real-time subtitles and a clean green-and-white theme.
 
 **🌐 [Live Demo](https://zsasannia70-png.github.io/translation_app/)**
 

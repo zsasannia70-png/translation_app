@@ -7,11 +7,25 @@ const labelEn = document.getElementById('label-en');
 const labelFi = document.getElementById('label-fi');
 const sourceTag = document.getElementById('source-lang-tag');
 const targetTag = document.getElementById('target-lang-tag');
+const webcam = document.getElementById('webcam');
+const subtitleOverlay = document.getElementById('subtitle-overlay');
 
 // Language state: true = Finnish to English, false = English to Finnish
 let isFiToEn = false;
 let recognition;
 let isListening = false;
+let stream;
+
+async function initWebcam() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        webcam.srcObject = stream;
+    } catch (err) {
+        console.error("Webcam error:", err);
+    }
+}
+
+initWebcam();
 
 // Initialize Speech Recognition
 if ('webkitSpeechRecognition' in window) {
@@ -55,6 +69,7 @@ if ('webkitSpeechRecognition' in window) {
         const textToTranslate = finalTranscript || interimTranscript;
         if (textToTranslate) {
             transcriptBox.innerText = textToTranslate;
+            subtitleOverlay.innerText = textToTranslate;
             // Debounce or only translate significant changes to reduce latency feel
             translateText(textToTranslate);
         }
@@ -132,7 +147,9 @@ async function translateText(text) {
             const data = await response.json();
             
             if (data.responseData) {
-                translationBox.innerText = data.responseData.translatedText;
+                const translated = data.responseData.translatedText;
+                translationBox.innerText = translated;
+                subtitleOverlay.innerText = translated; // Show translation as subtitle
             }
         } catch (error) {
             console.error('Translation error:', error);
