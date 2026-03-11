@@ -181,6 +181,23 @@ h1 span {
     border: 1px solid #edf2f7;
 }
 
+.manual-controls {
+    display: flex;
+    align-items: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    max-width: 500px;
+}
+
+.manual-controls.hidden {
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+}
+
 .lang-btn {
     border: none;
     background: transparent;
