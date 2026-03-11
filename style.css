@@ -1,12 +1,12 @@
 :root {
-    --primary-gradient: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
-    --bg-light: #fff1f2;
+    --primary-gradient: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    --bg-light: #f0f9ff;
     --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(244, 63, 94, 0.2);
-    --text-main: #4c0519;
-    --text-dim: #9f1239;
-    --accent: #f43f5e;
-    --secondary-pink: #ffe4e6;
+    --glass-border: rgba(14, 165, 233, 0.2);
+    --text-main: #0c4a6e;
+    --text-dim: #0369a1;
+    --accent: #0ea5e9;
+    --secondary-blue: #e0f2fe;
 }
 
 * {
@@ -48,7 +48,7 @@ body {
 .blob-1 {
     width: 400px;
     height: 400px;
-    background: #ffe4e6;
+    background: #e0f2fe;
     top: -100px;
     left: -100px;
 }
@@ -56,7 +56,7 @@ body {
 .blob-2 {
     width: 350px;
     height: 350px;
-    background: #fff1f2;
+    background: #f0f9ff;
     bottom: -50px;
     right: -50px;
     animation-delay: -5s;
@@ -65,8 +65,8 @@ body {
 .blob-3 {
     width: 300px;
     height: 300px;
-    background: #fb7185;
-    opacity: 0.15;
+    background: #0ea5e9;
+    opacity: 0.1;
     top: 50%;
     left: 50%;
     animation-delay: -10s;
@@ -77,80 +77,50 @@ body {
     100% { transform: translate(100px, 50px) scale(1.1); }
 }
 
-/* Floral Decorations */
-.floral-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
-}
-
-.floral {
-    position: absolute;
-    width: 200px;
-    opacity: 0.6;
-    animation: sway 6s infinite ease-in-out alternate;
-    filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.2));
-}
-
-.floral-1 { top: -20px; right: -50px; transform: rotate(15deg); }
-.floral-2 { bottom: -30px; left: -40px; transform: rotate(-10deg) scaleX(-1); width: 150px; animation-delay: -2s; }
-.floral-3 { top: 40%; left: -60px; transform: rotate(-45deg); opacity: 0.3; width: 120px; animation-delay: -4s; }
-
-@keyframes sway {
-    0% { transform: translate(0, 0) rotate(15deg); }
-    100% { transform: translate(10px, 15px) rotate(20deg); }
-}
-
 /* Glass Container */
 .glass-container {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
-    padding: 2.5rem;
+    padding: 3rem;
     border-radius: 2rem;
-    width: 95%;
-    max-width: 1100px;
-    box-shadow: 0 25px 50px -12px rgba(159, 18, 57, 0.15);
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 25px 50px -12px rgba(12, 74, 110, 0.15);
     z-index: 10;
     display: flex;
-    gap: 2.5rem;
-    transition: all 0.5s ease;
-}
-
-.side-panel {
-    flex: 1;
-    display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    border-right: 1px solid var(--glass-border);
-    padding-right: 2rem;
-}
-
-.content-panel {
-    flex: 1.5;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    gap: 2rem;
 }
 
 header {
-    text-align: left;
-    margin-bottom: 0;
+    text-align: center;
 }
 
-/* Rest of current styles preserved or tweaked */
+h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+h1 span {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-weight: 300;
+}
+
 .controls {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 0;
+    gap: 2rem;
 }
 
 .input-grid {
@@ -172,7 +142,7 @@ header {
 }
 
 #speak-btn {
-    background: var(--secondary-pink);
+    background: var(--secondary-blue);
     border: none;
     color: var(--accent);
     padding: 0.5rem;
@@ -190,7 +160,6 @@ header {
     transform: scale(1.1);
 }
 
-/* Existing styles below */
 .language-selector {
     display: flex;
     background: #ffffff;
@@ -203,11 +172,11 @@ header {
 .lang-btn {
     border: none;
     background: transparent;
-    padding: 0.5rem 1.5rem;
+    padding: 0.4rem 1.2rem;
     border-radius: 1.5rem;
     font-family: inherit;
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -220,10 +189,9 @@ header {
 .lang-btn.active {
     background: var(--primary-gradient);
     color: white;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
 }
 
-/* Video & Subtitles */
 .video-container {
     position: relative;
     width: 100%;
@@ -238,7 +206,7 @@ header {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transform: scaleX(-1); /* Mirror effect */
+    transform: scaleX(-1);
 }
 
 .subtitle-text {
@@ -252,7 +220,7 @@ header {
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     backdrop-filter: blur(4px);
@@ -261,10 +229,6 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.mic-section {
-    text-align: center;
 }
 
 #mic-btn {
@@ -280,7 +244,7 @@ header {
     justify-content: center;
     margin: 0 auto 0.5rem;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2);
 }
 
 #mic-btn:hover {
@@ -293,9 +257,9 @@ header {
 }
 
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); }
-    70% { box-shadow: 0 0 0 20px rgba(244, 63, 94, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(14, 165, 233, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
 }
 
 #status-text {
@@ -303,11 +267,10 @@ header {
     color: var(--text-dim);
 }
 
-/* Results Section */
 .results {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .result-card h3 {
@@ -319,10 +282,10 @@ header {
 }
 
 .text-box {
-    background: rgba(255, 255, 255, 0.5);
+    background: #ffffff;
     padding: 1rem;
     border-radius: 1rem;
-    min-height: 100px;
+    min-height: 80px;
     font-size: 1rem;
     line-height: 1.4;
     border: 1px solid var(--glass-border);
@@ -336,36 +299,25 @@ header {
 
 .text-box:focus {
     border-color: var(--accent);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
 }
 
 .text-box.highlight {
     border-color: var(--accent);
     color: var(--text-main);
-    background: var(--secondary-pink);
-    min-height: 120px;
+    background: var(--secondary-blue);
 }
 
 footer {
-    margin-top: 1.5rem;
-    text-align: right;
+    margin-top: 1rem;
+    text-align: center;
     font-size: 0.7rem;
     color: var(--text-dim);
 }
 
-/* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 600px) {
     .glass-container {
-        flex-direction: column;
-        padding: 2rem;
-        gap: 1.5rem;
-    }
-    .side-panel {
-        border-right: none;
-        padding-right: 0;
-        border-bottom: 1px solid var(--glass-border);
-        padding-bottom: 1.5rem;
+        padding: 2rem 1.5rem;
     }
     .input-grid {
         grid-template-columns: 1fr;

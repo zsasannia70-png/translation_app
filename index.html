@@ -20,76 +20,65 @@
         <div class="blob blob-3"></div>
     </div>
 
-    <!-- Floral Background Decorations -->
-    <div class="floral-container">
-        <img src="assets/flower1.png" class="floral floral-1" alt="floral decoration">
-        <img src="assets/flower2.png" class="floral floral-2" alt="floral decoration">
-        <img src="assets/flower1.png" class="floral floral-3" alt="floral decoration">
-    </div>
+    <main class="glass-container">
+        <header>
+            <h1>Zahra's <span>Translation App</span></h1>
+            <p class="subtitle">Real-time Video Subtitles & Translation</p>
+        </header>
 
-    <main class="glass-container horizontal">
-        <div class="side-panel">
-            <header>
-                <h1>Zahra's <span>Translation App</span></h1>
-                <p class="subtitle">Real-time Video Subtitles & Translation</p>
-            </header>
+        <section class="controls">
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="fi">FI</button>
+                <button class="lang-btn" data-lang="fa">Persian</button>
+            </div>
 
-            <section class="controls">
-                <div class="language-selector">
-                    <button class="lang-btn active" data-lang="en">EN</button>
-                    <button class="lang-btn" data-lang="fi">FI</button>
-                    <button class="lang-btn" data-lang="fa">Persian</button>
+            <div class="video-container">
+                <video id="webcam" autoplay playsinline muted></video>
+                <div id="subtitle-overlay" class="subtitle-text">...</div>
+            </div>
+
+            <div class="mic-section">
+                <button id="mic-btn" class="mic-glow">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </button>
+                <p id="status-text">Tap to start listening</p>
+            </div>
+        </section>
+
+        <section class="results">
+            <div class="input-grid">
+                <div class="result-card">
+                    <h3>English Input</h3>
+                    <textarea id="english-box" class="text-box" placeholder="Type or speak English..."></textarea>
                 </div>
 
-                <div class="video-container">
-                    <video id="webcam" autoplay playsinline muted></video>
-                    <div id="subtitle-overlay" class="subtitle-text">...</div>
+                <div class="result-card">
+                    <h3>Persian Input</h3>
+                    <textarea id="persian-box" class="text-box" placeholder="Type or speak Persian..." dir="rtl"></textarea>
                 </div>
+            </div>
 
-                <div class="mic-section">
-                    <button id="mic-btn" class="mic-glow">
-                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                            <line x1="12" y1="19" x2="12" y2="23"></line>
-                            <line x1="8" y1="23" x2="16" y2="23"></line>
-                        </svg>
+            <div class="result-card full-width">
+                <div class="card-header">
+                    <h3>Translated <span id="target-lang-tag">(Output)</span></h3>
+                    <button id="speak-btn" title="Hear Pronunciation">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                     </button>
-                    <p id="status-text">Tap to start listening</p>
                 </div>
-            </section>
-        </div>
+                <div id="translation-box" class="text-box highlight">...</div>
+            </div>
+        </section>
 
-        <div class="content-panel">
-            <section class="results">
-                <div class="input-grid">
-                    <div class="result-card">
-                        <h3>English Input</h3>
-                        <textarea id="english-box" class="text-box" placeholder="Type or speak English..."></textarea>
-                    </div>
-
-                    <div class="result-card">
-                        <h3>Persian Input</h3>
-                        <textarea id="persian-box" class="text-box" placeholder="Type or speak Persian..." dir="rtl"></textarea>
-                    </div>
-                </div>
-
-                <div class="result-card full-width">
-                    <div class="card-header">
-                        <h3>Translated <span id="target-lang-tag">(Output)</span></h3>
-                        <button id="speak-btn" title="Hear Pronunciation">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                        </button>
-                    </div>
-                    <div id="translation-box" class="text-box highlight">...</div>
-                </div>
-            </section>
-
-            <footer>
-                <p>Powered by Web Speech & MyMemory API</p>
-            </footer>
-        </div>
+        <footer>
+            <p>Powered by Web Speech & MyMemory API</p>
+        </footer>
     </main>
 
     <script src="script.js"></script>
