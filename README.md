@@ -3,6 +3,8 @@
 Zahra's Translator is a premium, real-time AI conversation tool. It features a "Zero-Touch" experience with automatic language detection and instant speech synthesis, designed for seamless communication between English, Persian, and Finnish.
 
 **🌐 [Live Demo](https://zsasannia70-png.github.io/translation_app/)**
+<img width="856" height="678" alt="image" src="https://github.com/user-attachments/assets/5a520251-d08e-4b1e-9a0b-9ea196aa0389" />
+
 
 ## ✨ Key Features
 
